@@ -1,0 +1,604 @@
+Transpose
+
+#include<stdio.h>
+void read(int row, int col, int a[row][col])
+{
+    printf("\nEnter the elements of %d x %d matrix",row, col);
+    for (int i=0;i<row;i++)
+    {
+        for (int j=0;j<col;j++)
+        {
+            scanf("%d",&a[i][j]);
+        }
+    }
+}
+
+void print(int row, int col, int a[row][col])
+{
+    printf("Matrix contains .......\n");
+    for (int i=0;i<row;i++)
+    {
+        for (int j=0;j<col;j++)
+        {
+            printf("%d\t",a[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void transpose(int row, int col, int a[row][col])
+{
+   printf("Transpose contains .......\n");
+    for (int i=0;i<col;i++)
+    {
+        for (int j=0;j<row;j++)
+        {
+            printf("%d\t",a[j][i]);
+        }
+        printf("\n");
+    }
+}
+
+void writeListToFile(int row,int col,int a[row][col], char* filename) {
+    FILE* file = fopen(filename, "w");
+    if (file == NULL) {
+        printf("Error opening file.\n");
+        return;
+    }
+    fprintf(file, "Transpose contains .......\n");
+    for (int i=0;i<col;i++)
+    {
+        for (int j=0;j<row;j++)
+        {
+            fprintf(file, "%d\t", a[j][i]);
+        }
+        fprintf(file,"\n");
+    }
+    fclose(file);
+}
+
+
+void main()
+{
+    int row,col;
+    printf("Enter the row of the matrix=\n");
+    scanf("%d",&row);
+    printf("Enter the column of the matrix=\n");
+    scanf("%d",&col);
+    int a[row][col];
+    read(row, col, a);
+    print(row,col, a);
+    transpose(row,col,a);
+    writeListToFile(row,col,a, "transpose.txt");
+}
+
+
+Multiplication
+
+#include<stdio.h>
+void read(int row, int col, int a[row][col])
+{
+    printf("\nEnter the elements of %d x %d matrix\n",row, col);
+    for (int i=0;i<row;i++)
+    {
+        for (int j=0;j<col;j++)
+        {
+            scanf("%d",&a[i][j]);
+        }
+    }
+}
+
+void print(int row, int col, int a[row][col])
+{
+    printf("Matrix contains .......\n");
+    for (int i=0;i<row;i++)
+    {
+        for (int j=0;j<col;j++)
+        {
+            printf("%d\t",a[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void mul(int rows1,int rows2,int cols1,int cols2, int mat1[rows1][cols1],int mat2[rows2][cols2])
+{
+    int rows_mul=rows1;
+    int cols_mul=cols2;
+    int mul[rows_mul][cols_mul];
+    printf("\nMULTIPLIED MATRIX-----\n");
+  for(int i=0;i<rows_mul;i++)
+    {
+        int j=0;
+        for(j=0;j<cols_mul;j++)
+        {
+            mul[i][j]=0;
+           for(int k=0;k<cols_mul;k++)
+           {
+               mul[i][j]+=mat1[i][k]*mat2[k][j];
+           }
+        }
+    }
+    print(rows_mul,cols_mul,mul);
+    FILE *file= fopen("file4.txt","w");
+    if (file == NULL) {
+        printf("Error opening file.\n");
+        return;
+    }
+    fprintf(file, "\nThe multiplied matrix is----\n");
+     for(int i=0;i<rows_mul;i++)
+    {
+        for(int j=0;j<cols_mul;j++)
+        {
+             fprintf(file, "%d\t",mul[i][j]);
+        }
+       fprintf(file, "\n");
+    }
+}
+
+void main()
+{
+    int rows1,cols1,rows2,cols2;
+    printf("Enter the row of the matrix 1=\n");
+    scanf("%d",&rows1);
+    printf("Enter the column of the matrix 1=\n");
+    scanf("%d",&cols1);
+    int first[rows1][cols1];
+    read(rows1, cols1, first);
+    print(rows1,cols1, first);
+    printf("Enter the row of the matrix 2= \n");
+    scanf("%d",&rows2);
+    printf("Enter the column of the matrix 2= \n");
+    scanf("%d",&cols2);
+    int second[rows2][cols2];
+    read(rows2, cols2, second);
+    print(rows2,cols2, second);
+    if(cols1 != rows2)
+    {
+        printf("\nNumber of columns of matrix 1 and rows of matrix 2 must be equal");
+        getch();
+        exit(0);
+    }
+    printf("\nMatrix can be formed\n");
+    mul(rows1,rows2,cols1,cols2, first, second);
+}
+
+Longest line from file
+
+#include<stdio.h>
+#include<Stdlib.h>
+#include<string.h>
+void read_lines(char lines[10][100], int *num_lines) {
+    char line[100];
+    while (*num_lines < 10) {
+        fgets(line, 100, stdin);
+        if (line[0] == '\n') {
+            break;
+        }
+        strncpy(lines[*num_lines], line, 100);
+        (*num_lines)++;
+    }
+}
+int Length(char *strings)
+{
+    int i;
+    for(i=0;strings[i]!='\0';++i);
+
+    return i;
+}
+void find_longest_line(char lines[10][100], int num_lines) {
+    int longestLength = 0;
+    char *longestLine = NULL;
+    for (int i = 0; i < num_lines; i++) {
+        int length = Length(lines[i]);
+        if (length > longestLength) {
+            longestLength = length;
+            longestLine = lines[i];
+        }
+    }
+    if (longestLine != NULL) {
+        printf("Longest line: %s", longestLine);
+    } else {
+        printf("No lines read\n");
+    }
+}
+void read_linesFromFile(char lines[10][100], int *num_lines) {
+    FILE *file = fopen("input.txt", "r");
+    if (file == NULL) {
+        printf("Could not open file input.txt");
+        return;
+    }
+    char line[100];
+    while (*num_lines < 10 && fgets(line, 100, file) != NULL) {
+        strncpy(lines[*num_lines], line, 100);
+        (*num_lines)++;
+    }
+    fclose(file);
+}
+int main(){
+ char lines[10][100];
+    int num_lines = 0;
+
+    // Read lines from user input
+    printf("Enter up to %d lines of text, or an empty line to stop:\n", 10);
+    read_lines(lines, &num_lines);
+    printf("Reading from the file\n");
+    read_linesFromFile(lines, &num_lines);
+      find_longest_line(lines, num_lines);
+
+}
+
+
+1.	Write a C program to read  text lines  from the following interfaces
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+void_read_lines(char line[10][100],int *num_lines)
+{
+     char lines[100];
+    while (*num_lines < 10)
+        {
+        fgets(line, 100, stdin);
+        if (line[0] == '\n')
+         {
+            break;
+        }
+        strncpy(lines[*num_lines], line, 100);
+        (*num_lines)++;
+    }
+}
+int length(char*strings)
+{
+    int i;
+    for(i=0;strings[i]=0;i++);
+    return i;
+
+}
+void find_longest_line(char lines[10][100],int num_lines)
+{
+    int longestlength =0;
+   char *longestline =NULL;
+    for(int i=0;i<num-lines;i++)
+    {
+        int length=length(lines[i]);
+        if(length > longestlength)
+        {
+            longestlength=length;
+            longestline=line[i];\*/-+      }
+    }
+    if (longestline =! NULL)
+    {
+        printf("longest line %s", longestline);
+
+    }
+    else
+    {
+        printf("no lines read\n");
+    }
+}
+int main()
+{
+    char lines [10][100];
+    int num_lines=0;
+    printf("%d \n",10);
+    read_line(lines,&num_lines);
+    find_longest_line(lines,num_lines);
+}
+
+
+2.	Re-wite the above program to find a pattern of letters in the set lines read from 
+a.	User input (maximum 10 lines to be read)
+b.	Files
+
+#include<stdio.h>
+#include<Stdlib.h>
+#include<string.h>
+void read_lines(char lines[10][100], int *num_lines) {
+    char line[100];
+    while (*num_lines < 10) {
+        fgets(line, 100, stdin);
+        if (line[0] == '\n') {
+            break;
+        }
+        strncpy(lines[*num_lines], line, 100);
+        (*num_lines)++;
+    }
+}
+int Length(char *strings)
+{
+    int i;
+    for(i=0;strings[i]!='\0';++i);
+
+    return i;
+}
+void find_longest_line(char lines[10][100], int num_lines) {
+    int longestLength = 0;
+    char *longestLine = NULL;
+    for (int i = 0; i < num_lines; i++) {
+        int length = Length(lines[i]);
+        if (length > longestLength) {
+            longestLength = length;
+            longestLine = lines[i];
+        }
+    }
+    if (longestLine != NULL) {
+        printf("Longest line: %s", longestLine);
+    } else {
+        printf("No lines read\n");
+    }
+}
+void read_linesFromFile(char lines[10][100], int *num_lines) {
+    FILE *file = fopen("input.txt", "r");
+    if (file == NULL) {
+        printf("Could not open file input.txt");
+        return;
+    }
+    char line[100];
+    while (*num_lines < 10 && fgets(line, 100, file) != NULL) {
+        strncpy(lines[*num_lines], line, 100);
+        (*num_lines)++;
+    }
+    fclose(file);
+}
+int main(){
+ char lines[10][100];
+    int num_lines = 0;
+
+    // Read lines from user input
+    printf("Enter up to %d lines of text, or an empty line to stop:\n", 10);
+    read_lines(lines, &num_lines);
+    printf("Reading from the file\n");
+    read_linesFromFile(lines, &num_lines);
+      find_longest_line(lines, num_lines);
+
+}
+
+-------
+
+#include<stdio.h>
+void read(int *,int);
+void display(int *,int);
+void bubble_sort(int a[],int);
+int main()
+{
+    int a[100], *p; p=a; int i,n;
+    printf("Enter the array size= ");
+    scanf("%d",&n);
+    read(p,n);
+    display(p,n);
+    bubble_sort(a,n);
+    display(p,n);
+    return 0;
+}
+
+void read(int *p,int n)
+{
+    int i;
+    printf("\nEnter the %d array elements\n",n);
+    for(i=0;i<n;i++)
+    {
+        scanf("%d",p);
+        p++;
+    }
+}
+
+void display(int *p,int n)
+{
+    int i;
+    printf("\nThe array elements are= \n");
+    for(i=0;i<n;i++)
+    {
+        printf("\nArr[%d]=%d",i,*p);
+        p++;
+    }
+}
+
+void bubble_sort(int a[100],int n)
+{
+    int i=0,j=0,temp;
+    for(i=0;i<n;i++)
+    {
+        for(j=0;j<n-i-1;j++)
+      {
+        if(a[j]>=a[j+1])
+        {
+            temp=a[j];
+            a[j]=a[j+1];
+            a[j+1]=temp;
+        }
+      }
+    }
+}
+
+
+Bubble sort
+
+// C program for implementation of Bubble sort
+#include <stdio.h>
+
+void swap(int* xp, int* yp)
+{
+	int temp = *xp;
+	*xp = *yp;
+	*yp = temp;
+}
+
+// A function to implement bubble sort
+void bubbleSort(int arr[], int n)
+{
+	int i, j;
+	for (i = 0; i < n - 1; i++)
+
+		// Last i elements are already in place
+		for (j = 0; j < n - i - 1; j++)
+			if (arr[j] > arr[j + 1])
+				swap(&arr[j], &arr[j + 1]);
+}
+
+/* Function to print an array */
+void printArray(int arr[], int size)
+{
+	int i;
+	for (i = 0; i < size; i++)
+		printf("%d ", arr[i]);
+	printf("\n");
+}
+
+Multiplication of two matrix
+
+// Driver program to test above functions
+int main()
+{
+	int arr[] = { 5, 1, 4, 2, 8 };
+	int n = sizeof(arr) / sizeof(arr[0]);
+	bubbleSort(arr, n);
+	printf("Sorted array: \n");
+	printArray(arr, n);
+	return 0;
+}
+
+#include <stdio.h>
+#include <stdlib.h>
+
+
+#define R1 2
+#define C1 2
+#define R2 2
+#define C2 2
+
+void mulMat(int mat1[][C1], int mat2[][C2])
+{
+    int rslt[R1][C2],i,j,k;
+
+    printf("Multiplication of given two matrices is:\n");
+
+    for ( i = 0; i < R1; i++)
+        {
+        for ( j = 0; j < C2; j++)
+        {
+            rslt[i][j] = 0;
+
+            for ( k = 0; k < R2; k++)
+                {
+                rslt[i][j] += mat1[i][k] * mat2[k][j];
+            }
+
+            printf("%d\t", rslt[i][j]);
+        }
+
+        printf("\n");
+    }
+}
+
+// Driver code
+int main()
+{
+
+    int mat1[R1][C1] = { { 1, 1 },
+                         { 2, 2 } };
+
+    int mat2[R2][C2] = { { 1, 1 },
+                         { 2, 2 } };
+
+
+    if (C1 != R2) {
+        printf("The number of columns in Matrix-1  must be "
+               "equal to the number of rows in "
+               "Matrix-2\n");
+        printf("Please update MACROs value according to "
+               "your array dimension in "
+               "#define section\n");
+
+        exit(EXIT_FAILURE);
+    }
+
+    mulMat(mat1, mat2);
+
+    return 0;
+}
+
+bubble using linked list
+
+#include<stdio.h>
+#include<stdlib.h>
+
+struct Node
+{
+	int data;
+	struct Node *next;
+};
+void insertAtTheBegin(struct Node **start_ref, int data);
+void bubbleSort(struct Node *start);
+void swap(struct Node *a, struct Node *b);
+void printList(struct Node *start);
+
+int main()
+{
+	int arr[] = {12, 56, 2, 11, 1, 90};
+	int list_size, i;
+	struct Node *start = NULL;
+	for (i = 0; i< 6; i++)
+		insertAtTheBegin(&start, arr[i]);
+	printf("\n Linked list before sorting ");
+	printList(start);
+	bubbleSort(start);
+
+	printf("\n Linked list after sorting ");
+	printList(start);
+
+	getchar();
+	return 0;
+}
+void insertAtTheBegin(struct Node **start_ref, int data)
+{
+	struct Node *ptr1 = (struct Node*)malloc(sizeof(struct Node));
+	ptr1->data = data;
+	ptr1->next = *start_ref;
+	*start_ref = ptr1;
+}
+void printList(struct Node *start)
+{
+	struct Node *temp = start;
+	printf("\n");
+	while (temp!=NULL)
+	{
+		printf("%d ", temp->data);
+		temp = temp->next;
+	}
+}
+void bubbleSort(struct Node *start)
+{
+	int swapped, i;
+	struct Node *ptr1;
+	struct Node *lptr = NULL;
+
+	if (start == NULL)
+		return;
+
+	do
+	{
+		swapped = 0;
+		ptr1 = start;
+
+		while (ptr1->next != lptr)
+		{
+			if (ptr1->data > ptr1->next->data)
+			{
+				swap(ptr1, ptr1->next);
+				swapped = 1;
+			}
+			ptr1 = ptr1->next;
+		}
+		lptr = ptr1;                    
+	}
+	while (swapped);
+}
+void swap(struct Node *a, struct Node *b)
+{
+	int temp = a->data;
+	a->data = b->data;
+	b->data = temp;
+}
+
+
