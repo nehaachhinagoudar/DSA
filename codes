@@ -602,3 +602,534 @@ void swap(struct Node *a, struct Node *b)
 }
 
 
+Merged linked list
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node
+{
+	int data;
+	struct Node* next;
+};
+struct Node* SortedMerge(struct Node* a,
+						struct Node* b);
+void FrontBackSplit(struct Node* source,
+					struct Node** frontRef,
+					struct Node** backRef);
+
+void MergeSort(struct Node** headRef)
+{
+	struct Node* head = *headRef;
+	struct Node* a;
+	struct Node* b;
+
+	if ((head == NULL) ||
+		(head->next == NULL))
+	{
+		return;
+	}
+	FrontBackSplit(head, &a, &b);
+
+	MergeSort(&a);
+	MergeSort(&b);
+
+	*headRef = SortedMerge(a, b);
+}
+
+struct Node* SortedMerge(struct Node* a,
+						struct Node* b)
+{
+	struct Node* result = NULL;
+
+	if (a == NULL)
+		return (b);
+	else if (b == NULL)
+		return (a);
+
+	if (a->data <= b->data)
+	{
+		result = a;
+		result->next =
+				SortedMerge(a->next, b);
+	}
+	else
+	{
+		result = b;
+		result->next = SortedMerge(a, b->next);
+	}
+	return (result);
+}
+
+void FrontBackSplit(struct Node* source,
+					struct Node** frontRef,
+					struct Node** backRef)
+{
+	struct Node* fast;
+	struct Node* slow;
+	slow = source;
+	fast = source->next;
+
+	while (fast != NULL)
+	{
+		fast = fast->next;
+		if (fast != NULL)
+		{
+			slow = slow->next;
+			fast = fast->next;
+		}
+	}
+
+	*frontRef = source;
+	*backRef = slow->next;
+	slow->next = NULL;
+}
+void printList(struct Node* node)
+{
+	while (node != NULL)
+	{
+		printf("%d ", node->data);
+		node = node->next;
+	}
+}
+void push(struct Node** head_ref,
+		int new_data)
+{
+	struct Node* new_node =
+		(struct Node*)malloc(sizeof(struct Node));
+
+	new_node->data = new_data;
+
+	new_node->next = (*head_ref);
+
+	(*head_ref) = new_node;
+}
+int main()
+{
+	struct Node* res = NULL;
+	struct Node* a = NULL;
+
+	push(&a, 15);
+	push(&a, 10);
+	push(&a, 5);
+	push(&a, 20);
+	push(&a, 3);
+	push(&a, 2);
+
+	MergeSort(&a);
+
+	printf("Sorted Linked List is: \n");
+	printList(a);
+
+	getchar();
+	return 0;
+}
+
+Stack
+
+#include <stdio.h>
+
+#include <stdlib.h>
+
+#define SIZE 4
+
+int top = -1, inp_array[SIZE];
+void push();
+void pop();
+void show();
+
+int main()
+{
+    int choice;
+
+    while (1)
+    {
+        printf("\nPerform operations on the stack:");
+        printf("\n1.Push the element\n2.Pop the element\n3.Show\n4.End");
+        printf("\n\nEnter the choice: ");
+        scanf("%d", &choice);
+
+        switch (choice)
+        {
+        case 1:
+            push();
+            break;
+        case 2:
+            pop();
+            break;
+        case 3:
+            show();
+            break;
+        case 4:
+            exit(0);
+
+        default:
+            printf("\nInvalid choice!!");
+        }
+    }
+}
+
+void push()
+{
+    int x;
+
+    if (top == SIZE - 1)
+    {
+        printf("\nOverflow!!");
+    }
+    else
+    {
+        printf("\nEnter the element to be added onto the stack: ");
+        scanf("%d", &x);
+        top = top + 1;
+        inp_array[top] = x;
+    }
+}
+
+void pop()
+{
+    if (top == -1)
+    {
+        printf("\nUnderflow!!");
+    }
+    else
+    {
+        printf("\nPopped element: %d", inp_array[top]);
+        top = top - 1;
+    }
+}
+
+void show()
+{
+    int i;
+    if(top == -1)
+    {
+        printf("\nUnderflow!!");
+    }
+    else
+    {
+        printf("\nElements present in the stack: \n");
+        for (i = top; i >= 0; --i)
+            printf("%d\n", inp_array[i]);
+    }
+}
+Original nuumber with stack
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <time.h>
+
+#define MAX_QUEUE_SIZE 100
+
+int queue[MAX_QUEUE_SIZE];
+int front = 0, rear = -1;
+
+void push(int number)
+{
+    if (rear == MAX_QUEUE_SIZE - 1)
+    {
+        printf("Queue overflow! Cannot push %d.\n", number);
+    } else
+    {
+        queue[++rear] = number;
+        printf("Pushed %d into the queue.\n", number);
+    }
+}
+
+void pop()
+{
+    if (front > rear)
+    {
+        printf("Queue is empty. Cannot pop.\n");
+    } else
+    {
+        int number = queue[front++];
+        printf("Popped %d from the queue.\n", number);
+    }
+}
+
+void pick()
+{
+    if (front > rear)
+    {
+        printf("Queue is empty. Cannot pick.\n");
+    } else
+    {
+        int index = rand() % (rear - front + 1) + front;
+        int number = queue[index];
+        printf("Picked %d from the queue at index %d.\n", number, index);
+    }
+}
+
+int main()
+{
+    srand(time(0)); // Initialize random seed
+     int i,j;
+    // Randomly generate numbers and perform queue operations
+    for (i = 0; i < 10; i++)
+        {
+        int command = rand() % 3;
+
+        if (command == 0)
+        {
+            int number = rand() % 100 + 1;
+            push(number);
+        } else if (command == 1)
+        {
+            pop();
+        } else if (command == 2)
+        {
+            pick();
+        }
+
+        printf("Queue: ");
+        for (j = front; j <= rear; j++)
+        {
+            printf("%d ", queue[j]);
+        }
+        printf("\n\n");
+    }
+
+    return 0;
+}
+
+Pre,Post,Inorder
+#include<stdlib.h>
+#include<stdio.h>
+
+struct bin_tree {
+int data;
+struct bin_tree * right, * left;
+};
+typedef struct bin_tree node;
+
+void insert(node ** tree, int val)
+{
+    node *temp = NULL;
+    if(!(*tree))
+    {
+        temp = (node *)malloc(sizeof(node));
+        temp->left = temp->right = NULL;
+        temp->data = val;
+        *tree = temp;
+        return;
+    }
+
+    if(val < (*tree)->data)
+    {
+        insert(&(*tree)->left, val);
+    }
+    else if(val > (*tree)->data)
+    {
+        insert(&(*tree)->right, val);
+    }
+
+}
+
+void print_preorder(node * tree)
+{
+    if (tree)
+    {
+        printf("%d\n",tree->data);
+        print_preorder(tree->left);
+        print_preorder(tree->right);
+    }
+
+}
+
+void print_inorder(node * tree)
+{
+    if (tree)
+    {
+        print_inorder(tree->left);
+        printf("%d\n",tree->data);
+        print_inorder(tree->right);
+    }
+}
+
+void print_postorder(node * tree)
+{
+    if (tree)
+    {
+        print_postorder(tree->left);
+        print_postorder(tree->right);
+        printf("%d\n",tree->data);
+    }
+}
+
+void deltree(node * tree)
+{
+    if (tree)
+    {
+        deltree(tree->left);
+        deltree(tree->right);
+        free(tree);
+    }
+}
+
+node* search(node ** tree, int val)
+{
+    if(!(*tree))
+    {
+        return NULL;
+    }
+
+    if(val < (*tree)->data)
+    {
+        search(&((*tree)->left), val);
+    }
+    else if(val > (*tree)->data)
+    {
+        search(&((*tree)->right), val);
+    }
+    else if(val == (*tree)->data)
+    {
+        return *tree;
+    }
+}
+
+void main()
+{
+    node *root;
+    node *tmp;
+    //int i;
+
+    root = NULL;
+    /* Inserting nodes into tree */
+    insert(&root, 9);
+    insert(&root, 4);
+    insert(&root, 15);
+    insert(&root, 6);
+    insert(&root, 12);
+    insert(&root, 17);
+    insert(&root, 2);
+
+    /* Printing nodes of tree */
+    printf("Pre Order Display\n");
+    print_preorder(root);
+
+    printf("In Order Display\n");
+    print_inorder(root);
+
+    printf("Post Order Display\n");
+    print_postorder(root);
+
+    /* Search node into tree */
+    tmp = search(&root, 4);
+    if (tmp)
+    {
+        printf("Searched node=%d\n", tmp->data);
+    }
+    else
+    {
+        printf("Data Not found in tree.\n");
+    }
+
+    /* Deleting all nodes of tree */
+    deltree(root);
+}
+ Binary tree insert and display
+
+#include<stdio.h>
+#include<stdlib.h>
+/* A binary tree node has data, pointer to left child
+and a pointer to right child */
+struct Node
+{
+  int data;
+  struct Node *left;
+  struct Node *right;
+};
+struct Node *newNode (int data)
+{
+  struct Node *Node = (struct Node *) malloc (sizeof (struct Node));
+  Node->data = data;
+  Node->left = NULL;
+  Node->right = NULL;
+
+  return (Node);
+};
+
+void printCurrentLevel (struct Node *root, int level);
+int height (struct Node *node);
+
+int height (struct Node *node)
+{
+  if (node == NULL)
+    return 0;
+  else
+    {
+/* compute the height of each subtree */
+      int lheight = height (node->left);
+      int rheight = height (node->right);
+
+/* use the larger one */
+      if (lheight > rheight)
+	return (lheight + 1);
+      else
+	return (rheight + 1);
+    }
+}
+
+void printLevelOrder (struct Node *root)
+{
+  int h = height (root);
+  int i;
+  for (i = 1; i <= h; i++)
+    printCurrentLevel (root, i);
+}				/* Print nodes at a current level */
+
+void printCurrentLevel (struct Node *root, int level)
+{
+  if (root == NULL)
+    return;
+  if (level == 1)
+    printf ("%d ", root->data);
+  else if (level > 1)
+    {
+      printCurrentLevel (root->left, level - 1);
+      printCurrentLevel (root->right, level - 1);
+    }
+    }
+
+struct Node *insert (struct Node *root, int val)
+{
+
+  if (root == NULL)
+    return newNode (val);
+
+  if (root->data < val)
+    root->right = insert (root->right, val);
+
+  else if (root->data > val)
+    root->left = insert (root->left, val);
+
+  return root;
+}
+
+// Driver code
+int main ()
+{
+  struct Node *root = newNode (10);
+  root->left = newNode (11);
+  root->left->left = newNode (7);
+  root->right = newNode (9);
+  root->right->left = newNode (15);
+  root->right->right = newNode (8);
+
+  printf ("Level order traversal before insertion: ");
+  printLevelOrder (root);
+  printf ("\n");
+
+  int key = 12;
+  root = insert (root, key);
+
+  printf ("Level order traversal after insertion: ");
+  printLevelOrder (root);
+  printf ("\n");
+
+  return 0;
+}
